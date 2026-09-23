@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konuşma — Türkçe nutq imtihoni platformasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="tile-motif" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">K</span>
+    <div class="brand-text">
+      <strong>Konuşma</strong>
+      <span>Türkçe nutq imtihoni</span>
+    </div>
+  </div>
+  <div class="wall-clock" id="wallClock">--:--:--</div>
+</header>
+
+<main id="app">
+
+  <!-- ======================= SETUP VIEW ======================= -->
+  <section id="setupView" class="view">
+    <div class="view-inner">
+
+      <div class="browser-warning hidden" id="browserWarning">
+        <strong>Diqqat:</strong> brauzeringiz ovoz yozib olishni (MediaRecorder) qo'llab-quvvatlamaydi. Iltimos, so'nggi versiyadagi <strong>Google Chrome</strong> yoki <strong>Microsoft Edge</strong>dan foydalaning.
+      </div>
+
+      <div class="intro">
+        <p class="eyebrow-plain">Imtihonni tayyorlash</p>
+        <h1>Savollaringizni kiriting, qolganini platforma qiladi.</h1>
+        <p class="lede">Har bir bo'lim uchun savol va rasmlarni to'ldiring. "Imtihonni boshlash" tugmasi bosilgach, platforma vaqtni kuzatib boradi, tayyorgarlik va gapirish vaqtlarini avtomatik boshqaradi va har bir javobingizni ovozli yozib boradi.</p>
+      </div>
+
+      <div class="template-io">
+        <button type="button" id="saveTemplateBtn" class="btn-ghost">Namunani saqlash (JSON)</button>
+        <button type="button" id="loadTemplateBtn" class="btn-ghost">Fayldan yuklash (JSON)</button>
+        <input type="file" id="loadTemplateInput" accept="application/json" class="hidden">
+      </div>
+
+      <div class="saved-exams">
+        <p class="saved-exams-title">Mening imtihonlarim — birini tanlang: darhol boshlang yoki tahrirlashda davom eting</p>
+        <div class="saved-exams-row">
+          <select id="savedExamsSelect">
+            <option value="">— Saqlangan imtihonlar —</option>
+          </select>
+          <button type="button" id="startSavedExamBtn" class="btn-primary-sm">Boshlash →</button>
+          <button type="button" id="deleteSavedExamBtn" class="btn-ghost">O'chirish</button>
+        </div>
+      </div>
+
+      <form id="setupForm">
+
+        <!-- 1-BO'LIM / 1-QISM -->
+        <fieldset class="section-card">
+          <legend>
+            <span class="section-num">1.1</span>
+            <span class="section-title">1-bo'lim — Kirish savollari</span>
+            <span class="section-meta">Har biri alohida ko'rsatiladi · 5 sek tayyorgarlik · 30 sek javob</span>
+          </legend>
+          <label class="field">
+            <span>1-savol</span>
+            <input type="text" name="q111" placeholder="Masalan: Eng sevimli shahringiz haqida gapirib bering." required>
+          </label>
+          <label class="field">
+            <span>2-savol</span>
+            <input type="text" name="q112" placeholder="Masalan: Mamlakatingizning mashhur taomini tasvirlab bering." required>
+          </label>
+          <label class="field">
+            <span>3-savol</span>
+            <input type="text" name="q113" placeholder="Masalan: Bo'sh vaqtingizda nima qilishni yoqtirasiz?" required>
+          </label>
+        </fieldset>
+
+        <!-- 1-BO'LIM / 2-QISM -->
+        <fieldset class="section-card">
+          <legend>
+            <span class="section-num">1.2</span>
+            <span class="section-title">1-bo'lim — Rasmlarni qiyoslash</span>
+            <span class="section-meta">3 savol birga ko'rinadi · 45 sek tayyorgarlik · 2 daq javob</span>
+          </legend>
+          <div class="two-col">
+            <label class="field file-field">
+              <span>A rasm</span>
+              <input type="file" name="img12a" accept="image/*">
+              <div class="image-preview" data-preview-for="img12a"></div>
+            </label>
+            <label class="field file-field">
+              <span>B rasm</span>
+              <input type="file" name="img12b" accept="image/*">
+              <div class="image-preview" data-preview-for="img12b"></div>
+            </label>
+          </div>
+          <label class="field">
+            <span>1-savol</span>
+            <input type="text" name="q121" placeholder="Masalan: Bu rasmlarda nimalarni ko'ryapsiz? Qiyoslay olasizmi?" required>
+          </label>
+          <label class="field">
+            <span>2-savol</span>
+            <input type="text" name="q122" placeholder="Masalan: Ko'p qavatli uyning hovlili uyga nisbatan afzalliklari nimada?" required>
+          </label>
+          <label class="field">
+            <span>3-savol</span>
+            <input type="text" name="q123" placeholder="Masalan: Nima uchun ba'zi odamlar hovlili uyni afzal ko'radi?" required>
+          </label>
+        </fieldset>
+
+        <!-- 2-BO'LIM -->
+        <fieldset class="section-card">
+          <legend>
+            <span class="section-num">2</span>
+            <span class="section-title">2-bo'lim — Rasm tavsifi</span>
+            <span class="section-meta">3 savol birga ko'rinadi · 1 daq tayyorgarlik · 2 daq javob</span>
+          </legend>
+          <label class="field file-field">
+            <span>Namuna rasm</span>
+            <input type="file" name="img2" accept="image/*">
+          </label>
+          <div class="image-preview" data-preview-for="img2"></div>
+          <label class="field">
+            <span>1-savol</span>
+            <input type="text" name="q21" placeholder="Masalan: Ishlaringizni ulgurolmagan vaqtingizni aytib bering." required>
+          </label>
+          <label class="field">
+            <span>2-savol</span>
+            <input type="text" name="q22" placeholder="Masalan: Vaqtni qanday boshqarishimiz mumkin?" required>
+          </label>
+          <label class="field">
+            <span>3-savol</span>
+            <input type="text" name="q23" placeholder="Masalan: Sizningcha, nega ilgari odamlarga vaqt yetgan-u, hozir yetmayapti?" required>
+          </label>
+        </fieldset>
+
+        <!-- 3-BO'LIM -->
+        <fieldset class="section-card">
+          <legend>
+            <span class="section-num">3</span>
+            <span class="section-title">3-bo'lim — Mavzu bo'yicha bahs</span>
+            <span class="section-meta">1 daq tayyorgarlik · 2 daq javob</span>
+          </legend>
+          <label class="field">
+            <span>Mavzu</span>
+            <input type="text" name="topic3" placeholder="Masalan: Odamlar tobora yolg'izlikka moyil bo'lmoqda. Bunga ijtimoiy nuqtai nazardan yo'l qo'yilishi kerakmi?" required>
+          </label>
+          <div class="two-col">
+            <label class="field">
+              <span>Lehiga (ixtiyoriy, har bir band alohida qatorda)</span>
+              <textarea name="pro3" rows="4" placeholder="Yolg'izlik ijodiy fikrlashni oshiradi&#10;Yolg'izlik sokin qaror qabul qilishga yordam beradi"></textarea>
+            </label>
+            <label class="field">
+              <span>Aleyhiga (ixtiyoriy, har bir band alohida qatorda)</span>
+              <textarea name="con3" rows="4" placeholder="Yolg'izlik depressiyaga olib kelishi mumkin&#10;Yolg'izlik yomon odatlarga bog'liqlikni kuchaytiradi"></textarea>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="button" id="clearFormBtn" class="btn-ghost">Tozalash</button>
+          <button type="button" id="saveExamBtn" class="btn-ghost">Imtihonni saqlash</button>
+          <button type="submit" class="btn-primary">Imtihonni boshlash →</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ======================= EXAM VIEW ======================= -->
+  <section id="examView" class="view hidden">
+    <div class="exam-inner">
+
+      <div class="exam-meta">
+        <span class="exam-section-label" id="examSectionLabel">1-bo'lim · 1-qism</span>
+        <span class="exam-question-index" id="examQuestionIndex"></span>
+      </div>
+
+      <div class="exam-stage hidden" id="examStage">
+        <div class="timer-ring-wrap">
+          <svg viewBox="0 0 220 220" class="timer-ring">
+            <circle cx="110" cy="110" r="98" class="ring-track"/>
+            <circle cx="110" cy="110" r="98" class="ring-progress" id="ringProgress"/>
+          </svg>
+          <div class="timer-center">
+            <span class="timer-phase" id="timerPhase">Tayyorgarlik</span>
+            <span class="timer-seconds" id="timerSeconds">5</span>
+            <span class="rec-dot hidden" id="recDot">● YOZILMOQDA</span>
+            <div class="level-meter hidden" id="levelMeter"><div class="level-fill" id="levelFill"></div></div>
+          </div>
+        </div>
+
+        <div class="exam-content">
+          <div class="exam-image-wrap hidden" id="examImageWrap"></div>
+          <div class="exam-questions" id="examQuestions"></div>
+        </div>
+
+        <div class="exam-controls">
+          <button type="button" id="pauseBtn" class="btn-ghost pause-btn">⏸ Pauza</button>
+          <button type="button" id="cancelExamBtn" class="btn-ghost cancel-btn">✕ Bekor qilish va qaytadan boshlash</button>
+        </div>
+      </div>
+
+      <div class="exam-precheck" id="examPrecheck">
+        <label class="field">
+          <span>Ism va familyangiz</span>
+          <input type="text" id="studentNameInput" placeholder="Masalan: Aziza Karimova" required>
+        </label>
+        <p>Imtihon boshlanishidan oldin mikrofonga ruxsat berishingiz kerak bo'ladi. Har bir gapirish bosqichi boshlanishi bilan ovoz yozib olinadi.</p>
+        <p class="precheck-error hidden" id="precheckError"></p>
+        <button id="beginExamBtn" class="btn-primary">Mikrofonga ruxsat berish va boshlash</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================= RESULTS VIEW ======================= -->
+  <section id="resultsView" class="view hidden">
+    <div class="view-inner">
+      <div class="intro">
+        <p class="eyebrow-plain">Yakunlandi</p>
+        <h1>Imtihon tugadi. Yozuvlaringiz tayyor.</h1>
+        <p class="lede" id="resultsStudentLine">Har bir bo'lim uchun yozilgan ovozli javoblarni tinglashingiz yoki yuklab olishingiz mumkin.</p>
+      </div>
+      <div class="recordings-list" id="recordingsList"></div>
+      <div class="form-actions">
+        <button id="downloadAllBtn" class="btn-ghost">Barchasini ZIP qilib yuklab olish</button>
+        <button id="newExamBtn" class="btn-primary">Yangi imtihonni boshlash</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
