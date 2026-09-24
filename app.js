@@ -125,6 +125,39 @@ function setImagePreview(name, dataUrl) {
   if (previewHost) previewHost.innerHTML = dataUrl ? `<img src="${dataUrl}" alt="Yuklangan rasm">` : '';
 }
 
+/* Rasmni brauzerda kichraytirib, JPEG sifatida siqib qaytaradi — shu tufayli
+   localStorage tezda to'lib qolmaydi va imtihon sahifasi ham tezroq yuklanadi. */
+function compressImageFile(file, maxDim = 1280, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round(height * (maxDim / width));
+            width = maxDim;
+          } else {
+            width = Math.round(width * (maxDim / height));
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => reject(new Error('Rasmni o\u2019qib bo\u2019lmadi'));
+      img.src = reader.result;
+    };
+    reader.onerror = () => reject(new Error('Faylni o\u2019qib bo\u2019lmadi'));
+    reader.readAsDataURL(file);
+  });
+}
+
 function wireImageInput(inputName) {
   const input = el.setupForm.querySelector(`input[name="${inputName}"]`);
   if (!input) return;
@@ -135,9 +168,14 @@ function wireImageInput(inputName) {
       setImagePreview(inputName, '');
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => setImagePreview(inputName, reader.result);
-    reader.readAsDataURL(file);
+    compressImageFile(file)
+      .then((dataUrl) => setImagePreview(inputName, dataUrl))
+      .catch(() => {
+        // Siqib bo'lmasa, asl faylni o'qib qo'yamiz (kamdan-kam holat)
+        const reader = new FileReader();
+        reader.onload = () => setImagePreview(inputName, reader.result);
+        reader.readAsDataURL(file);
+      });
   });
 }
 IMAGE_NAMES.forEach(wireImageInput);
